@@ -20,6 +20,10 @@
   <h2>System Access &amp; Root Permissions</h2>
   <p>To function, the Application requires Root Access to modify kernel parameters (CPU, GPU, and memory settings). This access is used strictly for local device optimization. No system data, hardware identifiers, or personal files accessed via root are ever collected or transmitted by the Service Provider.</p>
 
+  <h2>Foreground Service Usage</h2>
+  <p>The Application utilizes a foreground service specifically for its <strong>Battery Monitoring System</strong>. This service allows the Application to accurately track battery statistics (such as temperature, voltage, and discharge rates) in real-time, even when the Application is not actively in the foreground.</p>
+  <p>This service is essential for providing continuous monitoring and ensuring the accuracy of battery health data. <strong>All data processed by this service stays strictly on your device.</strong> No battery-related data or usage statistics are ever uploaded, shared, or stored externally.</p>
+
   <h2>Does the Application collect precise real-time location information?</h2>
   <p>This Application does not collect precise information about the location of your mobile device.</p>
 
@@ -27,7 +31,12 @@
   <p>Since the Application does not collect any information, no data is shared with third parties.</p>
 
   <h2>What are my opt-out rights?</h2>
-  <p>You can stop all access to system parameters by the Application easily by uninstalling it.</p>
+  <p>You can stop the Application's access to system parameters and battery monitoring at any time by:</p>
+  <ul>
+    <li>Disabling the Battery Monitoring feature within the Application settings.</li>
+    <li>Stopping the foreground service via the system notification.</li>
+    <li>Uninstalling the Application.</li>
+  </ul>
 
   <h2>Children</h2>
   <p>The Application is not used to knowingly solicit data from or market to children under the age of 13. The Service Provider does not knowingly collect personally identifiable information from children.</p>
