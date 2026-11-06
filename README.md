@@ -1,1 +1,0 @@
-# gabrieldrvss-design.github.io
