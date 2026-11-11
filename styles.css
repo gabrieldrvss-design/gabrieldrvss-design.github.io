@@ -30,7 +30,7 @@
   --effects: cubic-bezier(.34, .8, .34, 1);
   --morph: .75s;
 
-  --wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='10'%3E%3Cpath d='M0 5Q8-3 16 5T32 5' fill='none' stroke='%23000' stroke-width='3.5'/%3E%3C/svg%3E");
+  --wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='10'%3E%3Cpath d='M0 5Q8-1 16 5T32 5' fill='none' stroke='%23000' stroke-width='3.5'/%3E%3C/svg%3E");
   --page: min(1200px, calc(100% - 24px));
   font-family: 'Google Sans Flex', 'Google Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 }
@@ -44,7 +44,7 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+html { scroll-behavior: smooth; scroll-padding-top: 92px; }
 body { margin: 0; background: var(--surface); color: var(--on-surface); line-height: 1.5; overflow-x: clip; -webkit-font-smoothing: antialiased; }
 a { color: inherit; text-decoration: none; -webkit-tap-highlight-color: transparent; }
 :focus-visible { outline: 3px solid var(--secondary); outline-offset: 3px; }
@@ -57,16 +57,9 @@ img { display: block; }
 
 /* ---------- top bar ---------- */
 .top-bar { position: sticky; top: 12px; z-index: 10; margin: 12px auto 0; width: var(--page); display: flex; align-items: center; gap: 20px; padding: 8px 8px 8px 12px; border-radius: 999px; background: color-mix(in srgb, var(--surface-3) 84%, transparent); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); animation: drop .8s var(--spring) both; }
-.brand { display: inline-flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.125rem; }
+.brand { margin-right: auto; display: inline-flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.125rem; }
 .monogram { width: 44px; height: 44px; display: grid; place-items: center; background: var(--primary); color: var(--on-primary); font-weight: 800; font-size: 1.5rem; line-height: 1; padding-bottom: 4px; clip-path: var(--s-cookie9); border-radius: 16px; transition: clip-path var(--morph) var(--spring-fast), rotate var(--morph) var(--spring-fast); }
 .brand:hover .monogram { clip-path: var(--s-clover4); rotate: -45deg; }
-
-/* wavy linear progress: wave + gap + flat track + stop dot */
-.progress { --p: 0%; position: relative; flex: 1; height: 10px; min-width: 40px; }
-.progress-wave { position: absolute; inset: 0 auto 0 0; width: var(--p); background: var(--primary); -webkit-mask: var(--wave) 0 0 / 32px 10px repeat-x; mask: var(--wave) 0 0 / 32px 10px repeat-x; animation: flow 1s linear infinite paused; }
-.progress.moving .progress-wave { animation-play-state: running; }
-.progress-track { position: absolute; top: 3.25px; right: 0; left: min(calc(var(--p) + 8px), calc(100% - 3.5px)); height: 3.5px; border-radius: 999px; background: var(--outline-variant); }
-.progress-track::after { content: ''; position: absolute; right: 0; top: -.25px; width: 4px; height: 4px; border-radius: 50%; background: var(--primary); }
 
 /* floating toolbar with a sliding active indicator */
 .nav-pills { position: relative; display: flex; gap: 2px; }
@@ -120,8 +113,7 @@ html:not(.js) .icon-btn { display: none; }
 .hero-inner { min-width: 0; display: grid; gap: 24px; justify-items: start; }
 h1 { font-size: clamp(2.75rem, 6.6vw, 5.25rem); line-height: 1; font-weight: 800; letter-spacing: -.035em; }
 h1 span { color: var(--primary); }
-h1 em { position: relative; display: inline-block; font-style: normal; padding-bottom: .08em; color: var(--tertiary); }
-h1 em::after { content: ''; position: absolute; left: 0; right: 0; bottom: calc(-.02em - 10px); height: 10px; background: var(--tertiary); -webkit-mask: var(--wave) 0 0 / 32px 10px repeat-x; mask: var(--wave) 0 0 / 32px 10px repeat-x; animation: flow 3s linear infinite; }
+h1 em { font-style: normal; color: var(--tertiary); }
 .lead { font-size: clamp(1.0625rem, 1.7vw, 1.3125rem); max-width: 500px; }
 
 /* shape mosaic */
@@ -140,7 +132,8 @@ h1 em::after { content: ''; position: absolute; left: 0; right: 0; bottom: calc(
 .t9 { --fill: var(--sky); --a: var(--s-cookie12); --b: var(--s-cookie6); --c: var(--s-softburst); --at: -6s; --in: 320ms; }
 
 /* ---------- sections ---------- */
-.section { width: var(--page); margin: 0 auto; padding: clamp(64px, 9vw, 112px) 0 0; }
+/* In-page links land on the section's content, not on its top padding, just under the top bar. */
+.section { --gap: clamp(64px, 9vw, 112px); width: var(--page); margin: 0 auto; padding: var(--gap) 0 0; scroll-margin-top: calc(var(--gap) * -1); }
 .section-head { margin-bottom: 36px; padding: 0 12px; display: grid; gap: 10px; }
 .overline { font-size: .8125rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--primary); }
 h2 { font-size: clamp(2.125rem, 5vw, 3.75rem); line-height: 1.04; font-weight: 800; letter-spacing: -.03em; }
@@ -149,7 +142,7 @@ h2 { font-size: clamp(2.125rem, 5vw, 3.75rem); line-height: 1.04; font-weight: 8
 .app-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 12px; }
 .app-card { --container: var(--violet-container); --on-container: var(--on-violet-container); --accent: var(--violet); --on-accent: var(--on-violet); --a: var(--s-burst); --b: var(--s-cookie9);
   display: flex; flex-direction: column; padding: 16px 28px 28px; border-radius: 48px; background: var(--container); color: var(--on-container); transition: border-radius .7s var(--spring-fast); }
-.app-card.kernel { --container: var(--ember-container); --on-container: var(--on-ember-container); --accent: var(--ember); --on-accent: var(--on-ember); --a: var(--s-clover4); --b: var(--s-squircle); }
+.app-card.kernel { --container: var(--ember-container); --on-container: var(--on-ember-container); --accent: var(--ember); --on-accent: var(--on-ember); --a: var(--s-softburst); --b: var(--s-gem); }
 .app-card.notify { --container: var(--sky-container); --on-container: var(--on-sky-container); --accent: var(--sky); --on-accent: var(--on-sky); --a: var(--s-cookie12); --b: var(--s-clover8); }
 .app-card:hover { border-radius: 76px 32px 76px 32px; }
 .stage { position: relative; height: 232px; display: grid; place-items: center; margin-bottom: 12px; }
@@ -199,6 +192,22 @@ h3 { margin-top: 14px; font-size: 2.25rem; font-weight: 750; letter-spacing: -.0
 .skip { position: fixed; top: -100px; left: 16px; z-index: 20; background: var(--primary); color: var(--on-primary); padding: 14px 20px; border-radius: 16px; font-weight: 600; }
 .skip:focus { top: 16px; }
 
+/* ---------- background ----------
+   Large, faint M3E shapes behind everything. Each one drifts on its own path, slowly spins and
+   springs between shapes. JS parallaxes them at different depths and wraps each one back in from
+   the bottom once it leaves the top, so the background never runs out on a long page. */
+.backdrop { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.bg-shape { position: absolute; top: calc(var(--y) * 100%); width: var(--size); aspect-ratio: 1; animation: drift var(--drift, 38s) ease-in-out infinite alternate; animation-delay: var(--at, 0s); will-change: transform, translate; }
+.bg-shape::before { content: ''; position: absolute; inset: 0; background: var(--fill); opacity: var(--alpha, .1); clip-path: var(--a); border-radius: 30%; animation: morph var(--pace, 18s) var(--spring-fast) infinite, spin var(--turn, 90s) linear infinite; animation-delay: var(--at, 0s); }
+.b1 { --size: clamp(260px, 38vw, 560px); --fill: var(--primary); --a: var(--s-cookie9); --b: var(--s-clover4); --c: var(--s-softburst); --depth: .15; --at: -4s; left: -10%; --y: .08; }
+.b2 { --size: clamp(200px, 28vw, 420px); --fill: var(--tertiary); --a: var(--s-clover8); --b: var(--s-circle); --c: var(--s-burst); --depth: .28; --at: -11s; --drift: 44s; --turn: 70s; right: -8%; --y: .42; }
+.b3 { --size: clamp(160px, 20vw, 300px); --fill: var(--violet); --a: var(--s-burst); --b: var(--s-squircle); --c: var(--s-cookie6); --depth: .45; --at: -7s; --drift: 32s; --pace: 15s; left: 24%; --y: .78; }
+.b4 { --size: clamp(220px, 30vw, 460px); --fill: var(--secondary); --a: var(--s-softburst); --b: var(--s-gem); --c: var(--s-clover4); --depth: .2; --at: -15s; --drift: 50s; --turn: 120s; left: 52%; --y: -.12; }
+.b5 { --size: clamp(140px, 16vw, 240px); --fill: var(--sky); --a: var(--s-cookie12); --b: var(--s-clover8); --c: var(--s-circle); --depth: .6; --at: -2s; --drift: 28s; --pace: 14s; left: 46%; --y: .62; }
+.b6 { --size: clamp(240px, 34vw, 500px); --fill: var(--ember); --a: var(--s-squircle); --b: var(--s-cookie9); --c: var(--s-burst); --depth: .35; --at: -9s; --drift: 40s; --alpha: .08; right: -6%; --y: .95; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .bg-shape { --alpha: .12; } }
+:root[data-theme="dark"] .bg-shape { --alpha: .12; }
+
 /* ---------- motion ---------- */
 .js .reveal { opacity: 0; }
 .js .reveal.in { opacity: 1; animation: rise .9s var(--spring) var(--d, 0ms) backwards; }
@@ -207,7 +216,12 @@ h3 { margin-top: 14px; font-size: 2.25rem; font-weight: 750; letter-spacing: -.0
 @keyframes pop { from { scale: 0; rotate: -60deg; } }
 @keyframes drop { from { transform: translateY(-80px); opacity: 0; } }
 @keyframes spin { to { rotate: 360deg; } }
-@keyframes flow { to { -webkit-mask-position: 32px 0; mask-position: 32px 0; } }
+@keyframes drift {
+  0% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(6vw, -4vh) scale(1.08); }
+  66% { transform: translate(-4vw, 5vh) scale(.94); }
+  100% { transform: translate(3vw, 2vh) scale(1.04); }
+}
 @keyframes nudge { 40% { transform: translateY(1px) scale(1.15) rotate(-8deg); } }
 @keyframes ripple { to { transform: scale(1); opacity: 0; } }
 /* Each morph holds, then springs to the next shape. The easing applies per keyframe interval. */
@@ -223,6 +237,7 @@ h3 { margin-top: 14px; font-size: 2.25rem; font-weight: 750; letter-spacing: -.0
   .hero { grid-template-columns: minmax(0, 1fr); min-height: 0; }
   .mosaic { grid-template-columns: repeat(5, minmax(0, 1fr)); }
   .t3, .t4, .t7, .t8 { display: none; }
+  .b3, .b5 { display: none; }
 }
 @media (max-width: 700px) {
   /* The nav becomes a floating bottom toolbar, within thumb reach. A filter or transform

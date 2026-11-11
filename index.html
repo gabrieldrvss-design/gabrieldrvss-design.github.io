@@ -47,9 +47,17 @@
 <body>
   <a class="skip" href="#apps">Skip to apps</a>
 
+  <div class="backdrop" aria-hidden="true">
+    <span class="bg-shape b1"></span>
+    <span class="bg-shape b2"></span>
+    <span class="bg-shape b3"></span>
+    <span class="bg-shape b4"></span>
+    <span class="bg-shape b5"></span>
+    <span class="bg-shape b6"></span>
+  </div>
+
   <header class="top-bar">
     <a class="brand" href="#" aria-label="Gabriel31 home"><span class="monogram">g</span><span class="brand-name">Gabriel31</span></a>
-    <div class="progress" aria-hidden="true"><span class="progress-wave"></span><span class="progress-track"></span></div>
     <nav class="nav-pills" aria-label="Main navigation">
       <span class="nav-indicator" aria-hidden="true"></span>
       <a href="#apps" data-spy="apps"><span class="icon" aria-hidden="true">apps</span><span class="label">Apps</span></a>
@@ -223,13 +231,16 @@
       systemDark.addEventListener('change', paintToggle);
       paintToggle();
 
-      // Wavy scroll progress and the toolbar's sliding active indicator
-      var bar = document.querySelector('.progress');
+      // The toolbar's sliding active indicator
       var nav = document.querySelector('.nav-pills');
       var indicator = nav.querySelector('.nav-indicator');
       var links = Array.prototype.slice.call(nav.querySelectorAll('[data-spy]'));
       var sections = links.map(function (a) { return document.getElementById(a.dataset.spy); });
-      var ticking = false, idle;
+      var shapes = Array.prototype.slice.call(document.querySelectorAll('.bg-shape')).map(function (el) {
+        var cs = getComputedStyle(el);
+        return { el: el, y: parseFloat(cs.getPropertyValue('--y')), depth: parseFloat(cs.getPropertyValue('--depth')) };
+      });
+      var ticking = false;
 
       function moveIndicator(link) {
         indicator.classList.toggle('on', !!link);
@@ -240,7 +251,14 @@
       function update() {
         ticking = false;
         var max = root.scrollHeight - innerHeight;
-        bar.style.setProperty('--p', (max > 0 ? Math.min(100, scrollY / max * 100) : 0).toFixed(2) + '%');
+        if (!calm) shapes.forEach(function (sh) {
+          // Parallax upwards, wrapping through a band one shape-height taller than the screen on
+          // each side so the jump from top to bottom always happens off screen.
+          var size = sh.el.offsetWidth * 1.3, span = innerHeight + size * 2;
+          var pos = sh.y * innerHeight - scrollY * sh.depth + size;
+          pos = ((pos % span) + span) % span - size;
+          sh.el.style.translate = '0 ' + (pos - sh.y * innerHeight).toFixed(1) + 'px';
+        });
         var line = innerHeight * .45, active = null;
         sections.forEach(function (s, i) {
           var r = s.getBoundingClientRect();
@@ -253,12 +271,7 @@
         moveIndicator(active);
       }
       function schedule() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
-      addEventListener('scroll', function () {
-        schedule();
-        bar.classList.add('moving');
-        clearTimeout(idle);
-        idle = setTimeout(function () { bar.classList.remove('moving'); }, 220);
-      }, { passive: true });
+      addEventListener('scroll', schedule, { passive: true });
       addEventListener('resize', schedule);
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
       update();
